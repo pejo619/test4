@@ -28,7 +28,7 @@
     async function loadDetail() {
       const params = new URLSearchParams(location.search);
       const id = params.get("id");
-      const res = await fetch('products.json');
+      const res = await fetch('https://pejo619.github.io/test4/products.json');
       const data = await res.json();
       const product = data.find(p => p.id == id);
       const container = document.getElementById('productDetail');
