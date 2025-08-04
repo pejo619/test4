@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>All Products</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; }
+    nav { background: #222; padding: 1rem; color: #fff; display: flex; justify-content: space-between; }
+    nav a { color: white; margin: 0 1rem; text-decoration: none; }
+    .filters, .products { padding: 1rem; }
+    .product { border: 1px solid #ccc; padding: 1rem; margin: 1rem 0; }
+    .product h3 { margin: 0; }
+    select { margin-right: 10px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div><strong>Cabinet Store</strong></div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="products.html">Product</a>
+      <a href="contact.html">Contact Us</a>
+    </div>
+  </nav>
+  <div class="filters">
+    <label>Category:
+      <select id="categoryFilter">
+        <option value="">All</option>
+        <option value="wardrobe">Wardrobe</option>
+        <option value="table">Table</option>
+        <option value="bed frame">Bed Frame</option>
+        <option value="side table">Side Table</option>
+      </select>
+    </label>
+  </div>
+  <div class="products" id="productList"></div>
+
+  <script>
+    async function loadProducts() {
+      const res = await fetch('products.json');
+      const data = await res.json();
+      const list = document.getElementById('productList');
+      const filter = document.getElementById('categoryFilter');
+
+      function display(products) {
+        list.innerHTML = '';
+        products.forEach(p => {
+          const cheapest = p.variants.reduce((min, v) => v.price < min.price ? v : min, p.variants[0]);
+          const item = document.createElement('div');
+          item.className = 'product';
+          item.innerHTML = `
+            <h3>${p.name}</h3>
+            <p>Category: ${p.category}</p>
+            <p>From: RM${cheapest.price}</p>
+            <button onclick="location.href='product-detail.html?id=${p.id}'">View</button>
+          `;
+          list.appendChild(item);
+        });
+      }
+
+      filter.addEventListener('change', () => {
+        const val = filter.value.toLowerCase();
+        const filtered = val ? data.filter(p => p.category.toLowerCase() === val) : data;
+        display(filtered);
+      });
+
+      display(data);
+    }
+
+    loadProducts();
+  </script>
+</body>
+</html>
