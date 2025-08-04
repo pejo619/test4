@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Details</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 1rem; }
+    nav { background: #222; color: white; padding: 1rem; display: flex; justify-content: space-between; }
+    nav a { color: white; margin: 0 1rem; text-decoration: none; }
+    .details { padding: 1rem; }
+    select { margin-bottom: 1rem; display: block; }
+    button { padding: 10px 20px; background: #0a0; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div><strong>Cabinet Store</strong></div>
+    <div>
+      <a href="index.html">Home</a>
+      <a href="products.html">Product</a>
+      <a href="contact.html">Contact Us</a>
+    </div>
+  </nav>
+  <div class="details" id="productDetail"></div>
+
+  <script>
+    async function loadDetail() {
+      const params = new URLSearchParams(location.search);
+      const id = params.get("id");
+      const res = await fetch('products.json');
+      const data = await res.json();
+      const product = data.find(p => p.id == id);
+      const container = document.getElementById('productDetail');
+
+      if (!product) return container.innerHTML = "Product not found.";
+
+      let selected = product.variants[0];
+
+      function render() {
+        container.innerHTML = `
+          <h2>${product.name}</h2>
+          <label>Color:
+            <select id="color">
+              ${[...new Set(product.variants.map(v => v.color))].map(c => `<option>${c}</option>`).join('')}
+            </select>
+          </label>
+          <label>Material:
+            <select id="material">
+              ${[...new Set(product.variants.map(v => v.material))].map(m => `<option>${m}</option>`).join('')}
+            </select>
+          </label>
+          <label>Rail:
+            <select id="rail">
+              ${[...new Set(product.variants.map(v => v.rail))].map(r => `<option>${r}</option>`).join('')}
+            </select>
+          </label>
+          <p><strong>Price: RM <span id="price">${selected.price}</span></strong></p>
+          <button id="buyBtn">Buy Now via WhatsApp</button>
+        `;
+
+        document.querySelectorAll('select').forEach(sel => sel.addEventListener('change', updateVariant));
+        document.getElementById('buyBtn').addEventListener('click', () => {
+          const url = `https://wa.me/60123456789?text=I'm interested in ${product.name} - ${selected.color}, ${selected.material}, ${selected.rail} - RM${selected.price}`;
+          window.open(url, '_blank');
+        });
+      }
+
+      function updateVariant() {
+        const color = document.getElementById('color').value;
+        const material = document.getElementById('material').value;
+        const rail = document.getElementById('rail').value;
+        selected = product.variants.find(v => v.color === color && v.material === material && v.rail === rail) || selected;
+        document.getElementById('price').textContent = selected.price;
+      }
+
+      render();
+    }
+
+    loadDetail();
+  </script>
+</body>
+</html>
