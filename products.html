@@ -40,7 +40,7 @@
     async function loadProducts() {
       const res = await fetch('https://pejo619.github.io/test4/products.json');
       const data = await res.json();
-      const list = document.getElementById('https://pejo619.github.io/test4/products.json');
+      const list = document.getElementById('productList');
       const filter = document.getElementById('categoryFilter');
 
       function display(products) {
