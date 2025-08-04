@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1,
+    "name": "Two Door Wardrobe",
+    "category": "wardrobe",
+    "variants": [
+      { "color": "White", "material": "Melamine", "rail": "Soft Close", "price": 480 },
+      { "color": "Brown", "material": "Melamine", "rail": "Normal", "price": 450 }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Single Bed Frame",
+    "category": "bed frame",
+    "variants": [
+      { "color": "Oak", "material": "Solid Wood", "rail": "No Rail", "price": 550 }
+    ]
+  }
+]
